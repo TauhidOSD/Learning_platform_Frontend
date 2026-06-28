@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
@@ -10,7 +10,8 @@ import CourseCardSkeleton from "@/components/CourseCardSkeleton";
 const categories = ["Programming", "Design", "Marketing", "Business"];
 const levels = ["Beginner", "Intermediate", "Advanced"];
 
-export default function CoursesPage() {
+// ১. আপনার মূল পেজের লজিকটি আলাদা এই ফাংশনে থাকবে
+function CoursesContent() {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -102,5 +103,18 @@ export default function CoursesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+// ২. মূল এক্সপোর্ট পেজে Suspense বাউন্ডারি দিয়ে র্যাপ করে দেওয়া হলো
+export default function CoursesPage() {
+  return (
+    <Suspense fallback={
+      <div className="mx-auto max-w-screen-xl px-5 py-12 lg:px-10 text-center text-sm text-muted">
+        Loading courses platform...
+      </div>
+    }>
+      <CoursesContent />
+    </Suspense>
   );
 }
